@@ -32,7 +32,10 @@ const register=async(req,res)=>{
     if(!valid.isValidPassword(password)){
       return res.status(400).send({error_message:"password is not in valid format"})
     }
-
+    const userPhone=await staffModel.findOne({phone})
+    if(userPhone){
+        return res.status(400).send({message:"phone number is already register"})
+    }
     const user=await staffModel.findOne({emailId})
     if(user){
         return res.status(400).send({message:"email is already register"})

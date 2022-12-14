@@ -49,7 +49,8 @@ const addStudent=async(req,res)=>{
 const viewStudent=async (req,res)=>{
  try {
    const {name,subject}=req.query
-   let filter={isDeleted:false}
+   const staff=req.body.staffId
+   let filter={isDeleted:false,staffId:staff}
    if(name){
     filter.fullName={ $regex: name, $options: 'i' }
    }
@@ -57,6 +58,9 @@ const viewStudent=async (req,res)=>{
     filter.subject={ $regex: subject, $options:'i'}
     }
   const findData= await studentModel.find(filter)
+  if(findData.length==0){
+    return res.status(404).send({error_message:"no such student found"})
+  }
   return res.status(200).send(findData)
 
  } catch (error) {
